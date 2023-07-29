@@ -1,6 +1,14 @@
+import React from "react";
 import "./TaskCard.css";
 
-const TaskCard = (props) => {
+interface TaskCardProps {
+  dueDate?: string;
+  completedAtDate?: string;
+  title: string;
+  assigneeName: string;
+}
+
+const TaskCard = (props: TaskCardProps) => {
   return (
     <div className="TaskItem">
       <h2 className="text-xl font-bold"> {props.title} </h2>
