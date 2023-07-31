@@ -1,12 +1,13 @@
 import "./index.css";
 import "./App.css";
 import React from "react";
-import TaskList from "./TaskList";
+import TaskApp from "./TaskApp";
+
 
 function App() {
   return (
     <div className="App">
-      <TaskList />
+      <TaskApp />
     </div>
   );
 }
