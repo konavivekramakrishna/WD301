@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { TaskItem } from "./types";
 
 interface TaskFormProps {
@@ -6,13 +6,16 @@ interface TaskFormProps {
 }
 
 export default function TaskForm(props: TaskFormProps) {
-  const [formState, setFormState] = useState<TaskItem>({
+  const initialFormState: TaskItem = {
+    id: null,
     title: "",
     description: "",
-    date: "", // Keep 'date' here
-  });
+    date: "",
+  };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [formState, setFormState] = useState<TaskItem>(initialFormState);
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormState({
       ...formState,
@@ -20,17 +23,15 @@ export default function TaskForm(props: TaskFormProps) {
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (formState.title.trim() === "" || formState.date.trim() === "") {
       return;
     }
-    props.addTask(formState);
-    setFormState({
-      title: "",
-      description: "",
-      date: "",
-    });
+    // Set the id to be the same as the date
+    const taskToAdd: TaskItem = { ...formState, id: formState.date };
+    props.addTask(taskToAdd);
+    setFormState(initialFormState);
   };
 
   return (
@@ -61,9 +62,9 @@ export default function TaskForm(props: TaskFormProps) {
         <div className="relative z-0 w-full mb-6 group">
           <input
             id="todoDueDate"
-            name="date" // Keep 'date' here
+            name="date"
             type="date"
-            value={formState.date} // Use 'date' here
+            value={formState.date}
             onChange={handleInputChange}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder="Due Date"
