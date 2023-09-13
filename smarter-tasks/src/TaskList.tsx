@@ -1,6 +1,6 @@
 // TaskList.tsx
 import React from "react";
-import TaskCard from "./Task";
+import Task from "./Task";
 import { TaskItem } from "./types";
 
 interface TaskListProps {
@@ -13,7 +13,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
     <ul>
       {props.tasks.map((task: TaskItem, idx: number) => (
         <li key={task.id}>
-          <TaskCard item={task} removeTask={() => props.deleteTask(idx)} />
+          <Task item={task} removeTask={() => props.deleteTask(idx)} />
         </li>
       ))}
     </ul>
