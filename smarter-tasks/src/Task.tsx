@@ -1,11 +1,13 @@
-import "./TaskCard.css";
+// TaskCard.tsx
+import React from "react";
 import { TaskItem } from "./types";
 
-interface TaskProps {
+interface TaskCardProps {
   item: TaskItem;
-  removeTask: (task: TaskItem) => void;
+  removeTask: () => void;
 }
-const Task = (props: TaskProps) => {
+
+const TaskCard: React.FC<TaskCardProps> = (props) => {
   const { item, removeTask } = props;
   return (
     <div className="TaskItem shadow-md border border-slate-100">
@@ -19,10 +21,9 @@ const Task = (props: TaskProps) => {
             Description: {item.description}
           </p>
         </div>
-
         <button
           className="deleteTaskButton cursor-pointer flex items-center justify-center h-4 w-4 rounded-full my-5 mr-5"
-          onClick={() => removeTask(item)}
+          onClick={removeTask}
         >
           X
         </button>
@@ -31,4 +32,4 @@ const Task = (props: TaskProps) => {
   );
 };
 
-export default Task;
+export default TaskCard;

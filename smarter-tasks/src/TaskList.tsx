@@ -1,18 +1,23 @@
+// TaskList.tsx
 import React from "react";
-import Task from "./Task";
+import TaskCard from "./Task";
 import { TaskItem } from "./types";
-import { TaskListProps } from "./types";
 
-export default function TaskList(props: TaskListProps) {
-  return props.tasks.map((task: TaskItem, idx: number) => (
-    <li>
-      <Task
-        key={idx}
-        title={task.title}
-        description={task.description}
-        date={new Date(task.date)}
-        deleteTask={() => props.deleteTask(idx)}
-      />
-    </li>
-  ));
+interface TaskListProps {
+  tasks: TaskItem[];
+  deleteTask: (idx: number) => void;
 }
+
+const TaskList: React.FC<TaskListProps> = (props) => {
+  return (
+    <ul>
+      {props.tasks.map((task: TaskItem, idx: number) => (
+        <li key={task.id}>
+          <TaskCard item={task} removeTask={() => props.deleteTask(idx)} />
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default TaskList;
