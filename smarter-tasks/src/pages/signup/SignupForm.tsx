@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const SignupForm: React.FC = () => {
   const [organisationName, setOrganisationName] = useState("");
+
+  const [userPassword, setUserPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const [userPassword, setUserPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -27,25 +28,17 @@ const SignupForm: React.FC = () => {
       if (!response.ok) {
         throw new Error("Sign-up failed");
       }
-
       console.log("Sign-up successful");
-
       const data = await response.json();
+
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userData", JSON.stringify(data.user));
-
       navigate("/dashboard");
     } catch (error) {
       console.error("Sign-up failed:", error);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    setter(e.target.value);
-  };
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -57,7 +50,7 @@ const SignupForm: React.FC = () => {
           name="organisationName"
           id="organisationName"
           value={organisationName}
-          onChange={(e) => handleChange(e, setOrganisationName)}
+          onChange={(e) => setOrganisationName(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
@@ -70,7 +63,7 @@ const SignupForm: React.FC = () => {
           name="userName"
           id="userName"
           value={userName}
-          onChange={(e) => handleChange(e, setUserName)}
+          onChange={(e) => setUserName(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
@@ -81,7 +74,7 @@ const SignupForm: React.FC = () => {
           name="userEmail"
           id="userEmail"
           value={userEmail}
-          onChange={(e) => handleChange(e, setUserEmail)}
+          onChange={(e) => setUserEmail(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
@@ -94,7 +87,7 @@ const SignupForm: React.FC = () => {
           name="userPassword"
           id="userPassword"
           value={userPassword}
-          onChange={(e) => handleChange(e, setUserPassword)}
+          onChange={(e) => setUserPassword(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>

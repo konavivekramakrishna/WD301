@@ -1,45 +1,47 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 const Dashboard: React.FC = () => {
-  const [user] = useState(() => {
-    const user = window.localStorage.getItem("userData");
-
-    if (user) {
-      return JSON.parse(user);
+  const [userDetails] = useState(() => {
+    const userDetails = window.localStorage.getItem("userData");
+    if (userDetails && userDetails !== "undefined") {
+      return JSON.parse(userDetails);
     }
     return null;
   });
-
-  if (!user) {
+  const navigate = useNavigate();
+  if (!userDetails) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          You are not logged in
+          Please login to view this page
         </h1>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex  flex-col justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div className="min-h-screen items-center justify-center bg-gray-100">
+      <h1 className="text-3xl font-bold text-center text-gray-800 pt-6">
         Dashboard
       </h1>
-      <div className="bg-white mx-auto text-center shadow overflow-hidden sm:rounded-lg p-8 w-1/3">
-        <p className="text-gray-800">Welcome, {user.name}</p>
-        <p className="text-gray-800">Your email is {user.email}</p>
-      </div>
-      <a
-        href="/signin"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 mx-auto"
-        onClick={() => {
-          window.localStorage.removeItem("userData");
-          window.localStorage.removeItem("authToken");
-        }}
+      <button
         id="logout-link"
+        onClick={() => {
+          localStorage.removeItem("userData");
+          localStorage.removeItem("authToken");
+          navigate("/signin");
+        }}
+        className="m-6 text-white px-4 bg-gray-700 hover:bg-gray-800text-white font-semibold py-2  rounded-md focus:outline-none focus:shadow-outline-gray "
       >
         Logout
-      </a>
+      </button>
+      <h2 className="text-xl  text-center text-gray-800 mb-8">
+        Welcome, {userDetails.name}
+      </h2>
+      <p className="text-xl  text-center text-gray-800 mb-8">
+        Your email is {userDetails.email}
+      </p>
     </div>
   );
 };

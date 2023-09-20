@@ -1,12 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import Signin from "./pages/signin";
-import ProtectedRoute from "./ProtectedRoute";
-
-import Notfound from "./pages/Notfound";
-
 import Signup from "./pages/signup";
+import Signin from "./pages/signin";
 import Dashboard from "./pages/dashboard";
+import ProtectedRoute from "./ProtectedRoute";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Notfound from "./pages/Notfound";
 
 const router = createBrowserRouter([
   {
