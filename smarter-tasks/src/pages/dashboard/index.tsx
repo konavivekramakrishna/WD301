@@ -10,10 +10,6 @@ const Dashboard: React.FC = () => {
     return null;
   });
 
-  const Logout = () => {
-    window.localStorage.removeItem("userData");
-  };
-
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -37,7 +33,7 @@ const Dashboard: React.FC = () => {
         href="/signin"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 mx-auto"
         onClick={() => {
-          Logout();
+          window.localStorage.removeItem("userData");
         }}
         id="logout-link"
       >
