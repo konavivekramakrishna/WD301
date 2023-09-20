@@ -1,6 +1,0 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useNavigate } from "react-router-dom";
-export default function NotFound() {
-    const navigate = useNavigate();
-    return (_jsx("div", { className: "flex flex-col justify-between h-full", children: _jsxs("main", { className: "flex-1 bg-white", children: [_jsxs("div", { className: "container mx-auto", children: [_jsx("picture", { className: "flex flex-col px-4 pt-5 items-center", children: _jsx("img", { className: "md:w-3/5", src: "https://assets.pupilfirst.com/assets/layouts/errors/error-404-08c5164253e472a31d5a3207fe6086db80b42c7bfbd7dca08363e55c5945d17b.svg", alt: "Page not found" }) }), _jsxs("div", { className: "max-w-3xl mx-auto text-center px-4 pb-4", children: [_jsx("h5", { className: "text-l font-medium text-gray-600", children: "404" }), _jsx("p", { className: "mt-3 text-sm text-gray-500 leading-normal", children: "You may have mistyped the address, or the page may have moved." }), _jsx("p", { className: "mt-1 mb-3 text-sm text-gray-500 leading-normal", children: "Try heading back to our homepage?" })] })] }), _jsx("footer", { children: _jsx("div", { className: "container mx-auto px-4 text-center", children: _jsx("button", { id: "backToHomeButton", onClick: () => navigate("/home"), className: "text-blue-600 hover:text-blue-500", children: "Home" }) }) })] }) }));
-}

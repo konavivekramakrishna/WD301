@@ -1,55 +1,41 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import TaskListPage from "./pages/TaskListPage";
-import Signin from "./pages/Signin";
+import Signin from "./pages/signin";
 import ProtectedRoute from "./ProtectedRoute";
-import Layout from "./Layout";
-import TaskDetailsPage from "./pages/TaskDetailsPage";
 
-import NotFound from "./pages/Notfound";
-import HomePage from "./pages/HomePage";
+import Notfound from "./pages/Notfound";
+
+import Signup from "./pages/signup";
+import Dashboard from "./pages/dashboard";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/signin" replace />,
+    element: <Signup />,
   },
   {
-    path: "/notfound",
-    element: <NotFound />,
+    path: "/signup",
+    element: <Signup />,
   },
   {
     path: "/signin",
     element: <Signin />,
   },
   {
+    path: "/notfound",
+    element: <Notfound />,
+  },
+  {
+    path: "/dashboard",
     element: (
       <ProtectedRoute>
-        <Layout />
+        <Dashboard />
       </ProtectedRoute>
     ),
-    children: [
-      {
-        path: "tasks",
-        element: <TaskListPage />,
-      },
-      {
-        path: "home",
-        element: <HomePage />,
-      },
-      {
-        path: "tasks/:id",
-        element: <TaskDetailsPage />,
-      },
-      {
-        path: "*",
-        element: <Navigate to="/notfound" replace />,
-      },
-    ],
+  },
+  {
+    path: "*",
+    element: <Notfound />,
   },
 ]);
 
