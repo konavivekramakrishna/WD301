@@ -40,8 +40,8 @@ const LoginForm: React.FC = () => {
         <label className="block text-gray-700 font-semibold mb-2">Email:</label>
         <input
           type="email"
-          name="userEmail"
-          id="userEmail"
+          name="email"
+          id="email"
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -53,8 +53,8 @@ const LoginForm: React.FC = () => {
         </label>
         <input
           type="password"
-          name="userPassword"
-          id="userPassword"
+          name="password"
+          id="password"
           value={userPassword}
           onChange={(e) => setUserPassword(e.target.value)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
