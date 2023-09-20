@@ -38,7 +38,7 @@ export default function SignupForm() {
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<string>>,
+    setter: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setter(e.target.value);
   };
@@ -58,7 +58,7 @@ export default function SignupForm() {
         </label>
         <input
           type="text"
-          id="orgName"
+          id="organisationName"
           value={orgName}
           onChange={(e) => handleInputChange(e, setOrgName)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -73,7 +73,7 @@ export default function SignupForm() {
         </label>
         <input
           type="text"
-          id="fullName"
+          id="userName"
           value={fullName}
           onChange={(e) => handleInputChange(e, setFullName)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -88,7 +88,7 @@ export default function SignupForm() {
         </label>
         <input
           type="email"
-          id="emailAddress"
+          id="userEmail"
           value={emailAddress}
           onChange={(e) => handleInputChange(e, setEmailAddress)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -103,7 +103,7 @@ export default function SignupForm() {
         </label>
         <input
           type="password"
-          id="password"
+          id="userPassword"
           value={password}
           onChange={(e) => handleInputChange(e, setPassword)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"

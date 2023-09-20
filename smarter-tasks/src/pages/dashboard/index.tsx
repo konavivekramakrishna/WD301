@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const [user] = useState(() => {
@@ -9,9 +10,11 @@ const Dashboard: React.FC = () => {
     }
     return null;
   });
+  const navigate = useNavigate();
 
   const Logout = () => {
     window.localStorage.removeItem("userData");
+    navigate("/signin");
   };
 
   if (!user) {
