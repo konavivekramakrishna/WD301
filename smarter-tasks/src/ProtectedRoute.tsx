@@ -5,7 +5,7 @@ export default function ProtectedRoute({
 }: {
   children: JSX.Element;
 }) {
-  const authenticated = localStorage.getItem("authToken");
+  const authenticated = !!localStorage.getItem("authToken");
   if (authenticated) {
     return <>{children}</>;
   } else {
