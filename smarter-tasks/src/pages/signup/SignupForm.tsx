@@ -27,10 +27,6 @@ export default function SignupForm() {
       if (!res.ok) {
         throw new Error("Registration failed");
       }
-      const userData = await res.json();
-
-      localStorage.setItem("userData", JSON.stringify(userData.user));
-      localStorage.setItem("authToken", userData.token);
 
       console.log("Registration successful");
 
@@ -52,7 +48,6 @@ export default function SignupForm() {
       onSubmit={submitForm}
       className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl"
     >
-      <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
       <div className="mb-4">
         <label
           htmlFor="orgName"

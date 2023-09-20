@@ -29,7 +29,7 @@ export default function NotFound() {
           <div className="container mx-auto px-4 text-center">
             <button
               id="backToHomeButton"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/home")}
               className="text-blue-600 hover:text-blue-500"
             >
               Dashboard
