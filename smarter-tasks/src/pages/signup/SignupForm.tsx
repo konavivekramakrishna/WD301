@@ -65,7 +65,7 @@ export default function SignupForm() {
       </div>
       <div className="mb-4">
         <label
-          htmlFor="fullName"
+          htmlFor="userName"
           className="block text-gray-700 font-semibold mb-2"
         >
           Full Name:
@@ -73,6 +73,7 @@ export default function SignupForm() {
         <input
           type="text"
           id="userName"
+          name="userName"
           value={fullName}
           onChange={(e) => handleInputChange(e, setFullName)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -88,6 +89,7 @@ export default function SignupForm() {
         <input
           type="email"
           id="userEmail"
+          name="userEmail"
           value={emailAddress}
           onChange={(e) => handleInputChange(e, setEmailAddress)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
@@ -103,6 +105,7 @@ export default function SignupForm() {
         <input
           type="password"
           id="userPassword"
+          name="userPassword"
           value={password}
           onChange={(e) => handleInputChange(e, setPassword)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
