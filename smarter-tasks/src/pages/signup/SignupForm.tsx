@@ -2,126 +2,110 @@ import React, { useState } from "react";
 import { BASE_API_ENDPOINT } from "../../config/constants";
 import { useNavigate } from "react-router-dom";
 
-export default function SignupForm() {
-  const [orgName, setOrgName] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
+const SignupForm: React.FC = () => {
+  const [organisationName, setOrganisationName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
   const navigate = useNavigate();
 
-  const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      let res = await fetch(`${BASE_API_ENDPOINT}/organisations`, {
+      const response = await fetch(`${BASE_API_ENDPOINT}/organisations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: orgName,
-          user_name: fullName,
-          email: emailAddress,
-          password,
+          name: organisationName,
+          user_name: userName,
+          email: userEmail,
+          password: userPassword,
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("Registration failed");
+      if (!response.ok) {
+        throw new Error("Sign-up failed");
       }
 
-      console.log("Registration successful");
+      console.log("Sign-up successful");
 
-      const data = await res.json();
-
+      const data = await response.json();
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userData", JSON.stringify(data.user));
 
       navigate("/dashboard");
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.error("Sign-up failed:", error);
     }
   };
 
-  const handleInputChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     setter: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setter(e.target.value);
   };
-
   return (
-    <form
-      onSubmit={submitForm}
-      className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl"
-    >
-      <div className="mb-4">
-        <label
-          htmlFor="orgName"
-          className="block text-gray-700 font-semibold mb-2"
-        >
-          Organization Name:
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">
+          Organisation Name:
         </label>
         <input
           type="text"
+          name="organisationName"
           id="organisationName"
-          value={orgName}
-          onChange={(e) => handleInputChange(e, setOrgName)}
+          value={organisationName}
+          onChange={(e) => handleChange(e, setOrganisationName)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
-      <div className="mb-4">
-        <label
-          htmlFor="userName"
-          className="block text-gray-700 font-semibold mb-2"
-        >
-          Full Name:
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">
+          Your Name:
         </label>
         <input
           type="text"
-          id="userName"
           name="userName"
-          value={fullName}
-          onChange={(e) => handleInputChange(e, setFullName)}
+          id="userName"
+          value={userName}
+          onChange={(e) => handleChange(e, setUserName)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
-      <div className="mb-4">
-        <label
-          htmlFor="emailAddress"
-          className="block text-gray-700 font-semibold mb-2"
-        >
-          Email:
-        </label>
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">Email:</label>
         <input
           type="email"
-          id="userEmail"
           name="userEmail"
-          value={emailAddress}
-          onChange={(e) => handleInputChange(e, setEmailAddress)}
+          id="userEmail"
+          value={userEmail}
+          onChange={(e) => handleChange(e, setUserEmail)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
-      <div className="mb-6">
-        <label
-          htmlFor="password"
-          className="block text-gray-700 font-semibold mb-2"
-        >
+      <div>
+        <label className="block text-gray-700 font-semibold mb-2">
           Password:
         </label>
         <input
           type="password"
-          id="userPassword"
           name="userPassword"
-          value={password}
-          onChange={(e) => handleInputChange(e, setPassword)}
+          id="userPassword"
+          value={userPassword}
+          onChange={(e) => handleChange(e, setUserPassword)}
           className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
         />
       </div>
       <button
         type="submit"
-        className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-gray"
+        className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-gray mt-4"
       >
-        Sign Up
+        Sign up
       </button>
     </form>
   );
-}
+};
+
+export default SignupForm;
