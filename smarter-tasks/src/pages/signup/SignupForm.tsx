@@ -13,7 +13,7 @@ export default function SignupForm() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_API_ENDPOINT}/organisations`, {
+      const res = await fetch(`${BASE_API_ENDPOINT}/organisations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -24,9 +24,13 @@ export default function SignupForm() {
         }),
       });
 
-      if (!response.ok) {
+      if (!res.ok) {
         throw new Error("Registration failed");
       }
+      const userData = await res.json();
+
+      localStorage.setItem("userData", JSON.stringify(userData.user));
+      localStorage.setItem("authToken", userData.token);
 
       console.log("Registration successful");
 
