@@ -1,4 +1,4 @@
-import { BASE_API_ENDPOINT } from "../../config/constants";
+import { API_ENDPOINT } from "../../config/constants";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
@@ -11,7 +11,7 @@ const SigninForm: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_API_ENDPOINT}/users/sign_in`, {
+      const response = await fetch(`${API_ENDPOINT}/users/sign_in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -27,7 +27,7 @@ const SigninForm: React.FC = () => {
 
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userData", JSON.stringify(data.user));
-      navigate("/dashboard");
+      navigate("/account");
     } catch (error) {
       console.error("Sign-in failed:", error);
     }

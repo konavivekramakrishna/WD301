@@ -1,47 +1,37 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const [userDetails] = useState(() => {
-    const userDetails = window.localStorage.getItem("userData");
-    if (userDetails && userDetails !== "undefined") {
-      return JSON.parse(userDetails);
+    const userD = localStorage.getItem("userData");
+
+    if (userD) {
+      return JSON.parse(userD);
     }
     return null;
   });
+
   const navigate = useNavigate();
-  if (!userDetails) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Please login to view this page
-        </h1>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-center text-gray-800 pt-6">
-        Dashboard
-      </h1>
-      <button
-        id="logout-link"
-        onClick={() => {
-          localStorage.removeItem("userData");
-          localStorage.removeItem("authToken");
-          navigate("/signin");
-        }}
-        className="m-6 text-white px-4 bg-gray-700 hover:bg-gray-800text-white font-semibold py-2  rounded-md focus:outline-none focus:shadow-outline-gray "
-      >
-        Logout
-      </button>
-      <h2 className="text-xl  text-center text-gray-800 mb-8">
-        Welcome, {userDetails.name}
-      </h2>
-      <p className="text-xl  text-center text-gray-800 mb-8">
-        Your email is {userDetails.email}
-      </p>
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
+        <p className="mb-2">Username: {userDetails.name}</p>
+        <p>Email: {userDetails.email}</p>
+        <a
+          href="#"
+          id="logout-link"
+          className="mt-4 inline-block text-blue-500 hover:underline"
+          onClick={() => {
+            localStorage.removeItem("userData");
+            localStorage.removeItem("authToken");
+            navigate("/signin");
+          }}
+        >
+          Logout
+        </a>
+      </div>
     </div>
   );
 };

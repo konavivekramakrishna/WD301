@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BASE_API_ENDPOINT } from "../../config/constants";
+import { API_ENDPOINT } from "../../config/constants";
 import { useNavigate } from "react-router-dom";
 
 const SignupForm: React.FC = () => {
@@ -14,7 +14,7 @@ const SignupForm: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_API_ENDPOINT}/organisations`, {
+      const response = await fetch(`${API_ENDPOINT}/organisations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,7 +33,7 @@ const SignupForm: React.FC = () => {
 
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("userData", JSON.stringify(data.user));
-      navigate("/dashboard");
+      navigate("/account");
     } catch (error) {
       console.error("Sign-up failed:", error);
     }
