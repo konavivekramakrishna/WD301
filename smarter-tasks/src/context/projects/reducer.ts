@@ -36,7 +36,7 @@ export type ProjectsActions =
 
 export const reducer = (
   state: ProjectsState = initialState,
-  action: ProjectsActions
+  action: ProjectsActions,
 ): ProjectsState => {
   // ...
   switch (action.type) {

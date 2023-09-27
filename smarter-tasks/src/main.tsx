@@ -6,5 +6,5 @@ import { ThemeProvider } from "./context/theme";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <App />
-  </ThemeProvider>
+  </ThemeProvider>,
 );

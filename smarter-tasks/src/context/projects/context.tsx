@@ -8,13 +8,13 @@ import {
 import React, { createContext, useContext, useReducer } from "react";
 
 const ProjectsStateContext = createContext<ProjectsState | undefined>(
-  undefined
+  undefined,
 );
 
 type ProjectsDispatch = React.Dispatch<ProjectsActions>;
 
 const ProjectsDispatchContext = createContext<ProjectsDispatch | undefined>(
-  undefined
+  undefined,
 );
 
 export const ProjectsProvider: React.FC<React.PropsWithChildren> = ({

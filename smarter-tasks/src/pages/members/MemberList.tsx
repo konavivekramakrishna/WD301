@@ -4,7 +4,7 @@ import { useMemberDispatch } from "../../context/members/context";
 
 import { useEffect } from "react";
 
-import  MemberListItems  from "./MemberListItems";
+import MemberListItems from "./MemberListItems";
 
 export default function MemberList() {
   const memberDispatch = useMemberDispatch();

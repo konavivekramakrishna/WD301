@@ -7,7 +7,7 @@ import {
 import React, { createContext, useContext, useReducer } from "react";
 
 const MemberDispatchContext = createContext<MemberDispatch | undefined>(
-  undefined
+  undefined,
 );
 
 const MemberStateContext = createContext<MembersState | undefined>(undefined);
