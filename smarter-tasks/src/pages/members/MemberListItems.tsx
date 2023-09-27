@@ -37,7 +37,7 @@ const MemberListItems = () => {
   return (
     <div className="flex flex-col space-y-4">
       {members.map((member: any) => (
-        <div key={member.id} id="member">
+        <div className="member"  key={member.id} id="member">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <p>{member.name}</p>
