@@ -3,7 +3,7 @@ import {
   useMemberState,
 } from "../../context/members/context";
 
-import { deleteMemberWithId } from "../../context/members/action";
+import { deleteMemberWithId } from "../../context/members/actions";
 import { MembersState } from "../../context/members/reducer";
 
 const MemberListItems = () => {

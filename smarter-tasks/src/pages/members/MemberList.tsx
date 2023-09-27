@@ -1,4 +1,4 @@
-import { fetchAllMembers } from "../../context/members/action";
+import { fetchAllMembers } from "../../context/members/actions";
 
 import { useMemberDispatch } from "../../context/members/context";
 

@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { AddMember } from "../../context/members/action";
+import { AddMember } from "../../context/members/actions";
 import { useMemberDispatch } from "../../context/members/context";
 import { Dialog } from "@headlessui/react";
 import { Transition } from "@headlessui/react";
