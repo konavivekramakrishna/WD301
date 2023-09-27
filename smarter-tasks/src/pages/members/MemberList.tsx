@@ -11,7 +11,7 @@ export default function MemberList() {
 
   useEffect(() => {
     fetchAllMembers(memberDispatch);
-  }, [memberDispatch]);
+  }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">

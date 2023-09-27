@@ -1,10 +1,11 @@
 // src/App.tsx
 
-import   { useContext } from "react";
+import { useContext } from "react";
 import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import router from "./routes";
 import { ThemeContext } from "./context/theme";
+import { MemberProvider } from "./context/members/context";
 
 // To do that, first I'll import the `ProjectsProvider` in the `App` component.
 
@@ -20,7 +21,9 @@ const App = () => {
       }`}
     >
       <ProjectsProvider>
-        <RouterProvider router={router} />
+        <MemberProvider>
+          <RouterProvider router={router} />
+        </MemberProvider>
       </ProjectsProvider>
     </div>
   );
