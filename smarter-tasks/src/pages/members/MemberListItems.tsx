@@ -29,6 +29,11 @@ const MemberListItems = () => {
     );
   }
 
+  if (members.length === 0) {
+    return <span>No users</span>;
+  }
+
+
   return (
     <div className="flex flex-col space-y-4">
       {members.map((member: any) => (

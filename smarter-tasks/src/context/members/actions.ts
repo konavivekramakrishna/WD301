@@ -69,10 +69,7 @@ export const deleteMemberWithId = async (dispatch: any, memberId: number) => {
     if (!res.ok) {
       throw new Error("Failure while delete member");
     }
-    const resdata = await res.json();
-    if (resdata.errors && resdata.errors.length > 0) {
-      return { ok: false, error: resdata.errors[0].message };
-    }
+
     dispatch({ type: "DELETE_MEMBER_SUCCESS", payload: memberId });
     return { ok: true };
   } catch (error) {
