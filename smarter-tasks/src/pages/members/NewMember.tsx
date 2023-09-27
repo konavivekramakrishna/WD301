@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form"; //
 import { SubmitHandler } from "react-hook-form"; //
 
 type Inputs = {
+  name: string;
   email: string;
   password: string;
-  name: string;
 };
 
 export default function NewMember() {
@@ -33,7 +33,7 @@ export default function NewMember() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const { email, password, name } = data;
+    const { name, email, password } = data;
 
     const res = await AddMember(DispatchMembers, {
       name,
@@ -143,7 +143,7 @@ export default function NewMember() {
                     Submit
                   </button>
                   <button
-                    type="button"
+                    type="submit"
                     onClick={closeM}
                     className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >

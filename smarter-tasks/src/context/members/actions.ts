@@ -48,7 +48,7 @@ export const AddMember = async (dispatch: any, dataToPost: any) => {
     if (resdata.errors && resdata.errors.length > 0) {
       return { ok: false, error: resdata.errors[0].message };
     }
-    dispatch({ type: "ADD_MEMBER_SUCCESS", payload: resdata });
+    dispatch({ type: "ADD_MEMBER_SUCCESS", payload: resdata.user });
     return { ok: true };
   } catch (error) {
     console.log("Failed Operation");
