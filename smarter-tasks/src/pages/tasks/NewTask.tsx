@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-const */
+/* eslint-disable react/react-in-jsx-scope */
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,7 +16,7 @@ const NewTask = () => {
   let { projectID } = useParams();
   let navigate = useNavigate();
 
-  // Use react-hook-form to create form submission handler and state.
+  
   const {
     register,
     handleSubmit,
@@ -22,20 +25,21 @@ const NewTask = () => {
   const projectState = useProjectsState();
   const taskDispatch = useTasksDispatch();
 
-  // We do some sanity checks to make sure the `projectID` passed is a valid one
+   
   const selectedProject = projectState?.projects.filter(
-    (project) => `${project.id}` === projectID,
+    (project) => `${project.id}` === projectID
   )?.[0];
   if (!selectedProject) {
     return <>No such Project!</>;
   }
+
   function closeModal() {
     setIsOpen(false);
     navigate("../../");
   }
   const onSubmit: SubmitHandler<TaskDetailsPayload> = async (data) => {
     try {
-      // Invoke the actual API and create a task.
+     
       addTask(taskDispatch, projectID ?? "", data);
       closeModal();
     } catch (error) {
@@ -83,7 +87,7 @@ const NewTask = () => {
                         placeholder="Enter title"
                         autoFocus
                         id="title"
-                        // Register the title field
+                       
                         {...register("title", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
@@ -93,7 +97,7 @@ const NewTask = () => {
                         placeholder="Enter description"
                         autoFocus
                         id="description"
-                        // register the description field
+                       
                         {...register("description", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
@@ -103,13 +107,13 @@ const NewTask = () => {
                         placeholder="Enter due date"
                         autoFocus
                         id="dueDate"
-                        // register due date field
+                        
                         {...register("dueDate", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
                       <button
                         type="submit"
-                        // Set an id for the submit button
+                       
                         id="newTaskSubmitBtn"
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
