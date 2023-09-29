@@ -94,7 +94,6 @@ const NewProject = () => {
                       {error && <span>{error}</span>}
                       <input
                         type="text"
-                        name="name"
                         id="name"
                         placeholder="Enter project name..."
                         autoFocus
