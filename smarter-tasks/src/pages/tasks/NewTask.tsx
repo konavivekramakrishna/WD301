@@ -16,16 +16,10 @@ const NewTask = () => {
   let { projectID } = useParams();
   let navigate = useNavigate();
 
-  
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TaskDetailsPayload>();
+  const { register, handleSubmit } = useForm<TaskDetailsPayload>();
   const projectState = useProjectsState();
   const taskDispatch = useTasksDispatch();
 
-   
   const selectedProject = projectState?.projects.filter(
     (project) => `${project.id}` === projectID
   )?.[0];
@@ -39,7 +33,6 @@ const NewTask = () => {
   }
   const onSubmit: SubmitHandler<TaskDetailsPayload> = async (data) => {
     try {
-     
       addTask(taskDispatch, projectID ?? "", data);
       closeModal();
     } catch (error) {
@@ -87,7 +80,6 @@ const NewTask = () => {
                         placeholder="Enter title"
                         autoFocus
                         id="title"
-                       
                         {...register("title", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
@@ -97,7 +89,6 @@ const NewTask = () => {
                         placeholder="Enter description"
                         autoFocus
                         id="description"
-                       
                         {...register("description", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
@@ -107,13 +98,11 @@ const NewTask = () => {
                         placeholder="Enter due date"
                         autoFocus
                         id="dueDate"
-                        
                         {...register("dueDate", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
                       <button
                         type="submit"
-                       
                         id="newTaskSubmitBtn"
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
