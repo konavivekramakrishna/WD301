@@ -28,7 +28,7 @@ export type MemberReducerAction =
 
 export const reducer = (
   state: MembersState = initialState,
-  action: MemberReducerAction
+  action: MemberReducerAction,
 ): MembersState => {
   switch (action.type) {
     case "FETCH_ALL_MEMBERS_REQUEST":
