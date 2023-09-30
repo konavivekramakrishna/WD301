@@ -1,19 +1,19 @@
 import { useProjectsState } from "../../context/projects/context";
-import { useTasksState } from "../../context/task/context";
 import TaskDetails from "./TaskDetails";
 import { useParams } from "react-router-dom";
+import { useTasksState } from "../../context/task/context";
 
 const TaskDetailsContainer = () => {
-  let { taskID } = useParams();
-  const projectState = useProjectsState();
-  const taskListState = useTasksState();
-  const isFetchingTasks = taskListState.isLoading;
-  const selectedTask = taskListState.projectData.tasks?.[taskID || ""];
-   
-  if (isFetchingTasks || !projectState || projectState?.isLoading) {
+  const pState = useProjectsState();
+  const tLState = useTasksState();
+  const { tid } = useParams();
+  const loading = tLState.isLoading;
+  const sTask = tLState.projectData.tasks?.[tid || ""];
+
+  if (loading || !pState || pState?.isLoading) {
     return <>Loading...</>;
   }
-  if (!selectedTask) {
+  if (!sTask) {
     return <>No such task!</>;
   }
 

@@ -7,9 +7,10 @@ export default function ProtectedRoute({
 }) {
   const { pathname } = useLocation();
 
-  const authenticated = !!localStorage.getItem("authToken");
-  if (authenticated) {
+  const secretToken = !!localStorage.getItem("authToken");
+  if (secretToken) {
     return <>{children}</>;
   }
+
   return <Navigate to="/signin" replace state={{ referrer: pathname }} />;
 }

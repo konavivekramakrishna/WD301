@@ -1,32 +1,30 @@
-import { useProjectsState } from "../../context/projects/context";
 import { Link } from "react-router-dom";
+import { useProjectsState } from "../../context/projects/context";
 
 export default function ProjectListItems() {
-  let state: any = useProjectsState();
-  const { projects, isLoading, isError, errorMessage } = state;
-  console.log(projects);
+  const state: any = useProjectsState();
 
-  if (projects.length === 0 && isLoading) {
-    return <span>Loading...</span>;
+  const { projects, isLoading, isError, errorMessage } = state;
+
+  if (isLoading) {
+    return <div className="text-center mt-4">Loading...</div>;
   }
 
   if (isError) {
-    return <span>{errorMessage}</span>;
+    return <div className="text-red-500">{errorMessage}</div>;
   }
 
   return (
-    <>
-      {projects.map((project: any) => (
+    <div className="space-y-4">
+      {projects.map((item: any) => (
         <Link
-          key={project.id}
-          to={`${project.id}`}
-          className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+          key={item.id}
+          to={`${item.id}`}
+          className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out"
         >
-          <h5 className="mb-2 text-xl font-medium tracking-tight text-gray-900 dark:text-white">
-            {project.name}
-          </h5>
+          <h5 className="text-lg font-semibold text-gray-800">{item.name}</h5>
         </Link>
       ))}
-    </>
+    </div>
   );
 }

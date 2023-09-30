@@ -1,50 +1,50 @@
-import { useEffect } from "react";
+import DragDropList from "./DragDropList";
 import { Link, useParams } from "react-router-dom";
-
+import { useProjectsState } from "../../context/projects/context";
 import { useTasksDispatch, useTasksState } from "../../context/task/context";
 
-import DragDropList from "./DragDropList";
+import { useEffect } from "react";
+
 import { refreshTasks } from "../../context/task/actions";
-import { useProjectsState } from "../../context/projects/context";
 
 const ProjectDetails = () => {
-  const tasksState = useTasksState();
   const taskDispatch = useTasksDispatch();
   const projectState = useProjectsState();
-  let { projectID } = useParams();
+  const tState = useTasksState();
+
+  const { pid } = useParams();
   useEffect(() => {
-    if (projectID) refreshTasks(taskDispatch, projectID);
-  }, [projectID, taskDispatch]);
-  const selectedProject = projectState?.projects.filter(
-    (project) => `${project.id}` === projectID,
+    if (pid) refreshTasks(taskDispatch, pid);
+  }, [pid, taskDispatch]);
+
+  const sProject = projectState?.projects.filter(
+    (proj) => `${proj.id}` === pid,
   )?.[0];
 
-  if (!selectedProject) {
-    return <>No such Project!</>;
+  if (tState.isLoading) {
+    return <div className="text-center mt-8">Loading...</div>;
   }
 
-  if (tasksState.isLoading) {
-    return <>Loading...</>;
+  if (!sProject) {
+    return <div className="text-center mt-8">No such Project!</div>;
   }
   return (
-    <>
-      <div className="flex justify-between">
-        <h2 className="text-2xl font-medium tracking-tight text-slate-700">
-          {selectedProject.name}
-        </h2>
+    <div className="container mx-auto p-4">
+      <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+        <h2 className="text-2xl font-semibold mb-4">{sProject.name}</h2>
         <Link to={`tasks/new`}>
           <button
             id="newTaskBtn"
-            className="rounded-md bg-blue-600 px-4 py-2 m-2 text-sm font-medium text-white hover:bg-opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
           >
             New Task
           </button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 gap-2">
-        <DragDropList data={tasksState.projectData} />
+      <div>
+        <DragDropList data={tState.projectData} />
       </div>
-    </>
+    </div>
   );
 };
 

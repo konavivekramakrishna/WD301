@@ -1,160 +1,148 @@
-// Import required type annotations
 import { API_ENDPOINT } from "../../config/constants";
 import {
-  ProjectData,
-  TaskDetails,
-  TaskDetailsPayload,
+  TaskDetailsPayloadType,
   TaskListAvailableAction,
   TasksDispatch,
+  ProjectDataType,
 } from "./types";
 
-// The function will take a dispatch as first argument, which can be used to send an action to `reducer` and update the state accordingly
+import { TaskDetailsType } from "./types";
 
-export const reorderTasks = (
-  dispatch: TasksDispatch,
-  newState: ProjectData,
-) => {
-  dispatch({ type: TaskListAvailableAction.REORDER_TASKS, payload: newState });
-};
-
-export const refreshTasks = async (
-  dispatch: TasksDispatch,
-  projectID: string,
-) => {
-  const token = localStorage.getItem("authToken") ?? "";
+export const refreshTasks = async (dispatch: any, pid: string) => {
+  const secretToken = localStorage.getItem("authToken") ?? "";
   try {
     dispatch({ type: TaskListAvailableAction.FETCH_TASKS_REQUEST });
-    const response = await fetch(
-      `${API_ENDPOINT}/projects/${projectID}/tasks`,
+    const res = await fetch(`${API_ENDPOINT}/projects/${pid}/tasks`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${secretToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Error While Fetching Tasks");
+    }
+    const resdata = await res.json();
+    dispatch({
+      type: TaskListAvailableAction.FETCH_TASKS_SUCCESS,
+      payload: resdata,
+    });
+    console.dir(resdata);
+  } catch (error) {
+    console.error("Error Occured", error);
+    dispatch({
+      type: TaskListAvailableAction.FETCH_TASKS_FAILURE,
+      payload: "Error While Fetching Tasks",
+    });
+  }
+};
+
+export const reorderTasks = (
+  NewState: ProjectDataType,
+  dispatch: TasksDispatch,
+) => {
+  dispatch({ type: TaskListAvailableAction.REORDER_TASKS, payload: NewState });
+};
+
+export const updateTask = async (
+  pid: string,
+  task: TaskDetailsType,
+  dispatch: TasksDispatch,
+) => {
+  const secretToken = localStorage.getItem("authToken") ?? "";
+  try {
+    dispatch({ type: TaskListAvailableAction.UPDATE_TASK_REQUEST });
+    const res = await fetch(
+      `${API_ENDPOINT}/projects/${pid}/tasks/${task.id}`,
       {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${secretToken}`,
         },
+        body: JSON.stringify(task),
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch tasks");
+    if (!res.ok) {
+      throw new Error("Error While Updating Task");
     }
 
-    // extract the response body as JSON data
-    const data = await response.json();
+    dispatch({ type: TaskListAvailableAction.UPDATE_TASK_SUCCESS });
+    refreshTasks(dispatch, pid);
+  } catch (err) {
+    console.error("Error while updating Task", err);
+
     dispatch({
-      type: TaskListAvailableAction.FETCH_TASKS_SUCCESS,
-      payload: data,
-    });
-    console.dir(data);
-  } catch (error) {
-    console.error("Operation failed:", error);
-    dispatch({
-      type: TaskListAvailableAction.FETCH_TASKS_FAILURE,
-      payload: "Unable to load tasks",
+      type: TaskListAvailableAction.UPDATE_TASK_FAILURE,
+      payload: "Error while updating Task",
     });
   }
 };
 
 export const deleteTask = async (
+  pid: string,
+  task: TaskDetailsType,
   dispatch: TasksDispatch,
-  projectID: string,
-  task: TaskDetails,
 ) => {
-  const token = localStorage.getItem("authToken") ?? "";
+  const secretToken = localStorage.getItem("authToken") ?? "";
   try {
     dispatch({ type: TaskListAvailableAction.DELETE_TASKS_REQUEST });
-    const response = await fetch(
-      `${API_ENDPOINT}/projects/${projectID}/tasks/${task.id}`,
+    const res = await fetch(
+      `${API_ENDPOINT}/projects/${pid}/tasks/${task.id}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${secretToken}`,
         },
         body: JSON.stringify(task),
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete task");
+    if (!res.ok) {
+      throw new Error("Error While Deleting Task");
     }
     dispatch({ type: TaskListAvailableAction.DELETE_TASKS_SUCCESS });
-    refreshTasks(dispatch, projectID);
-  } catch (error) {
-    console.error("Operation failed:", error);
+    refreshTasks(dispatch, pid);
+  } catch (err) {
+    console.error("Error While Deleting Task", err);
     dispatch({
       type: TaskListAvailableAction.DELETE_TASKS_FAILURE,
-      payload: "Unable to delete task",
+      payload: "Error While Deleting Task",
     });
   }
 };
 
 export const addTask = async (
+  pid: string,
+  task: TaskDetailsPayloadType,
   dispatch: TasksDispatch,
-  projectID: string,
-  task: TaskDetailsPayload,
 ) => {
-  const token = localStorage.getItem("authToken") ?? "";
+  const secretToken = localStorage.getItem("authToken") ?? "";
   try {
     dispatch({ type: TaskListAvailableAction.CREATE_TASK_REQUEST });
-    const response = await fetch(
-      `${API_ENDPOINT}/projects/${projectID}/tasks/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(task),
-      },
-    );
 
-    if (!response.ok) {
-      throw new Error("Failed to create task");
+    const res = await fetch(`${API_ENDPOINT}/projects/${pid}/tasks/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${secretToken}`,
+      },
+      body: JSON.stringify(task),
+    });
+
+    if (!res.ok) {
+      throw new Error("Error While Creating Task");
     }
+
     dispatch({ type: TaskListAvailableAction.CREATE_TASK_SUCCESS });
-    refreshTasks(dispatch, projectID);
+    refreshTasks(dispatch, pid);
   } catch (error) {
-    console.error("Operation failed:", error);
+    console.error("Creating Task UnSuccessful", error);
+
     dispatch({
       type: TaskListAvailableAction.CREATE_TASK_FAILURE,
-      payload: "Unable to create task",
-    });
-  }
-};
-
-export const updateTask = async (
-  dispatch: TasksDispatch,
-  projectID: string,
-  task: TaskDetails,
-) => {
-  const token = localStorage.getItem("authToken") ?? "";
-  try {
-    // Display loading status
-    dispatch({ type: TaskListAvailableAction.UPDATE_TASK_REQUEST });
-    const response = await fetch(
-      `${API_ENDPOINT}/projects/${projectID}/tasks/${task.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(task),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to update task");
-    }
-    // Display success and refresh the tasks
-    dispatch({ type: TaskListAvailableAction.UPDATE_TASK_SUCCESS });
-    refreshTasks(dispatch, projectID);
-  } catch (error) {
-    console.error("Operation failed:", error);
-    // Display error status
-    dispatch({
-      type: TaskListAvailableAction.UPDATE_TASK_FAILURE,
-      payload: "Unable to update task",
+      payload: "Erro While Creating Task",
     });
   }
 };

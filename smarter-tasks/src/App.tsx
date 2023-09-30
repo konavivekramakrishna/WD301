@@ -1,31 +1,27 @@
-// src/App.tsx
-
-import { useContext } from "react";
+import { CommentsProvider } from "./context/comment/context";
 import { RouterProvider } from "react-router-dom";
-import "./App.css";
 import router from "./routes";
 import { ThemeContext } from "./context/theme";
-import { MemberProvider } from "./context/members/context";
-
-// To do that, first I'll import the `ProjectsProvider` in the `App` component.
-
 import { ProjectsProvider } from "./context/projects/context";
+import { MembersProvider } from "./context/members/context";
+import { useContext } from "react";
+import "./App.css";
 
-// Then I'll wrap the RouterProvider component with the <ProjectsProvider> component.
-const App = () => {
-  const { theme } = useContext(ThemeContext);
+export default function App() {
+  const CurrentTheme = useContext(ThemeContext);
   return (
     <div
       className={`h-screen w-full mx-auto py-2 ${
-        theme === "dark" ? "dark" : ""
+        CurrentTheme.theme === "dark" ? "dark" : ""
       }`}
     >
       <ProjectsProvider>
-        <MemberProvider>
-          <RouterProvider router={router} />
-        </MemberProvider>
+        <MembersProvider>
+          <CommentsProvider>
+            <RouterProvider router={router} />
+          </CommentsProvider>
+        </MembersProvider>
       </ProjectsProvider>
     </div>
   );
-};
-export default App;
+}

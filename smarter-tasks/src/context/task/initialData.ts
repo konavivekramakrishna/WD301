@@ -1,6 +1,6 @@
-import { ProjectData } from "./types";
+import { ProjectDataType } from "./types";
 
-const initialData: ProjectData = {
+const initialData: ProjectDataType = {
   columns: {
     pending: {
       id: "pending",

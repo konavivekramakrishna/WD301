@@ -1,79 +1,78 @@
 import { API_ENDPOINT } from "../../config/constants";
 
-export const fetchAllMembers = async (dispatch: any) => {
-  const secretToken = localStorage.getItem("authToken") ?? "";
-
+export const deleteMember = async (dispatch: any, mid: number) => {
   try {
-    dispatch({
-      type: "FETCH_ALL_MEMBERS_REQUEST",
-    });
-
-    const res = await fetch(`${API_ENDPOINT}/users`, {
-      method: "GET",
+    const Secrettoken = localStorage.getItem("authToken") ?? "";
+    const res = await fetch(`${API_ENDPOINT}/users/${mid}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${secretToken}`,
+        Authorization: `Bearer ${Secrettoken}`,
       },
     });
-    const resdata = await res.json();
-    dispatch({
-      type: "FETCH_ALL_MEMBERS_SUCCESS",
-      payload: resdata,
-    });
+    if (!res.ok) {
+      throw new Error("Unable to delete member");
+    }
+    const data = await res.json();
+    if (data.errors && data.errors.length > 0) {
+      return { ok: false, error: data.errors[0].message };
+    }
+    console.log(data);
+    dispatch({ type: "DELETE_MEMBER_SUCCESS", payload: mid });
+    return { ok: true };
   } catch (error) {
-    console.log("Error fetching members:", error);
-    dispatch({
-      type: "FETCH_ALL_MEMBERS_FAILURE",
-      payload: "Unable to load members",
-    });
+    console.error("Unable to delete member", error);
+    return { ok: false, error };
   }
 };
 
-export const AddMember = async (dispatch: any, dataToPost: any) => {
+export const addMember = async (dispatch: any, args: any) => {
   try {
-    const secretToken = localStorage.getItem("authToken") ?? "";
+    const Secrettoken = localStorage.getItem("authToken") ?? "";
     const res = await fetch(`${API_ENDPOINT}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${secretToken}`,
+        Authorization: `Bearer ${Secrettoken}`,
       },
-      body: JSON.stringify(dataToPost),
+      body: JSON.stringify(args),
     });
     if (!res.ok) {
-      throw new Error("Failed to Check Again create member");
+      throw new Error("Error while adding member !!!!");
     }
-
     const resdata = await res.json();
     if (resdata.errors && resdata.errors.length > 0) {
       return { ok: false, error: resdata.errors[0].message };
     }
+    console.log(resdata);
     dispatch({ type: "ADD_MEMBER_SUCCESS", payload: resdata.user });
     return { ok: true };
   } catch (error) {
-    console.log("Failed Operation");
+    console.error("Error while adding member!!! ", error);
     return { ok: false, error };
   }
 };
 
-export const deleteMemberWithId = async (dispatch: any, memberId: number) => {
+export const fetchMembers = async (dispatch: any) => {
+  const Secrettoken = localStorage.getItem("authToken") ?? "";
+
   try {
-    const secretToken = localStorage.getItem("authToken") ?? "";
-    const res = await fetch(`${API_ENDPOINT}/users/${memberId}`, {
-      method: "DELETE",
+    dispatch({ type: "FETCH_ALL_MEMBERS_REQUEST" });
+    const res = await fetch(`${API_ENDPOINT}/users`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${secretToken}`,
+        Authorization: `Bearer ${Secrettoken}`,
       },
     });
-    if (!res.ok) {
-      throw new Error("Failure while delete member");
-    }
-
-    dispatch({ type: "DELETE_MEMBER_SUCCESS", payload: memberId });
-    return { ok: true };
+    const resdata = await res.json();
+    console.log(resdata);
+    dispatch({ type: "FETCH_ALL_MEMBERS_SUCCESS", payload: resdata });
   } catch (error) {
-    console.log("Failed Operation");
-    return { ok: false, error };
+    console.log("ERROR WHILE GETTING MEMBERS", error);
+    dispatch({
+      type: "FETCH_ALL_MEMBERS_FAILURE",
+      payload: "Error while getting members",
+    });
   }
 };

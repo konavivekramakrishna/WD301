@@ -1,48 +1,47 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-/* eslint-disable react/react-in-jsx-scope */
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { useProjectsState } from "../../context/projects/context";
 import { useTasksDispatch } from "../../context/task/context";
 import { addTask } from "../../context/task/actions";
-import { TaskDetailsPayload } from "../../context/task/types";
+import { TaskDetailsPayloadType } from "../../context/task/types";
+
+import { useParams, useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 const NewTask = () => {
-  let [isOpen, setIsOpen] = useState(true);
-
-  let { projectID } = useParams();
-  let navigate = useNavigate();
-
-  const { register, handleSubmit } = useForm<TaskDetailsPayload>();
   const projectState = useProjectsState();
   const taskDispatch = useTasksDispatch();
 
+  let { pid } = useParams();
+  let [open, setOpen] = useState(true);
+  let navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm<TaskDetailsPayloadType>();
+
   const selectedProject = projectState?.projects.filter(
-    (project) => `${project.id}` === projectID
+    (proj) => `${proj.id}` === pid,
   )?.[0];
   if (!selectedProject) {
     return <>No such Project!</>;
   }
 
-  function closeModal() {
-    setIsOpen(false);
-    navigate("../../");
-  }
-  const onSubmit: SubmitHandler<TaskDetailsPayload> = async (data) => {
+  const Submit: SubmitHandler<TaskDetailsPayloadType> = async (data) => {
     try {
-      addTask(taskDispatch, projectID ?? "", data);
-      closeModal();
+      addTask(pid ?? "", data, taskDispatch);
+      closeM();
     } catch (error) {
       console.error("Operation failed:", error);
     }
   };
+  function closeM() {
+    setOpen(false);
+    navigate("../../");
+  }
+
   return (
     <>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Transition appear show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeM}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -73,13 +72,13 @@ const NewTask = () => {
                     Create new Task
                   </Dialog.Title>
                   <div className="mt-2">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(Submit)}>
                       <input
                         type="text"
                         required
+                        id="title"
                         placeholder="Enter title"
                         autoFocus
-                        id="title"
                         {...register("title", { required: true })}
                         className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
                       />
@@ -109,7 +108,7 @@ const NewTask = () => {
                         Submit
                       </button>
                       <button
-                        onClick={closeModal}
+                        onClick={closeM}
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
                         Cancel

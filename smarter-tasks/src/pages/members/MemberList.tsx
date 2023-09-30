@@ -1,24 +1,17 @@
-import { fetchAllMembers } from "../../context/members/actions";
-
-import { useMemberDispatch } from "../../context/members/context";
-
+import { fetchMembers } from "../../context/members/actions";
+import { useMembersDispatch } from "../../context/members/context";
 import { useEffect } from "react";
 
 import MemberListItems from "./MemberListItems";
-
 export default function MemberList() {
-  const memberDispatch = useMemberDispatch();
+  const dispatchMembers = useMembersDispatch();
 
   useEffect(() => {
-    fetchAllMembers(memberDispatch);
+    fetchMembers(dispatchMembers);
   }, []);
-
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold mb-4">Members</h1>
-        <MemberListItems />
-      </div>
+    <div className="grid gap-4 grid-cols-4 mt-5">
+      <MemberListItems />
     </div>
   );
 }

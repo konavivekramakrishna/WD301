@@ -1,64 +1,59 @@
-// src/pages/projects/NewProject.tsx
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-// First I'll import the addProject function
 import { addProject } from "../../context/projects/actions";
 
-// Then I'll import the useProjectsDispatch hook from projects context
 import { useProjectsDispatch } from "../../context/projects/context";
+
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+
 type Inputs = {
   name: string;
 };
+
 const NewProject = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Next, I'll add a new state to handle errors.
-  const [error, setError] = useState(null);
-
-  // Then I'll call the useProjectsDispatch function to get the dispatch function
-  // for projects
-  const dispatchProjects = useProjectsDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const closeModal = () => {
-    setIsOpen(false);
+
+  const dispatchProjects = useProjectsDispatch();
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
+
+  const closeM = () => {
+    setOpen(false);
   };
-  const openModal = () => {
-    setIsOpen(true);
+
+  const openM = () => {
+    setOpen(true);
   };
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+
+  const Submit: SubmitHandler<Inputs> = async (data) => {
     const { name } = data;
 
-    // Next, I'll call the addProject function with two arguments:
-    //`dispatchProjects` and an object with `name` attribute.
-    // As it's an async function, we will await for the response.
     const response = await addProject(dispatchProjects, { name });
 
-    // Then depending on response, I'll either close the modal...
     if (response.ok) {
-      setIsOpen(false);
+      setOpen(false);
     } else {
-      // Or I'll set the error.
       setError(response.error as React.SetStateAction<null>);
     }
   };
+
   return (
     <>
       <button
         type="button"
+        onClick={openM}
         id="newProjectBtn"
-        onClick={openModal}
         className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       >
         New Project
       </button>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Transition appear show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeM}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -89,12 +84,10 @@ const NewProject = () => {
                     Create new project
                   </Dialog.Title>
                   <div className="mt-2">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                      {/* I'll show the error, if it exists.*/}
+                    <form onSubmit={handleSubmit(Submit)}>
                       {error && <span>{error}</span>}
                       <input
                         type="text"
-                        id="name"
                         placeholder="Enter project name..."
                         autoFocus
                         {...register("name", { required: true })}
@@ -112,7 +105,7 @@ const NewProject = () => {
                       </button>
                       <button
                         type="submit"
-                        onClick={closeModal}
+                        onClick={closeM}
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
                         Cancel

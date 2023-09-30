@@ -1,16 +1,14 @@
-import React from "react";
-
-import ProjectDetails from "./ProjectDetails";
 import { TasksProvider } from "../../context/task/context";
 import { Outlet } from "react-router-dom";
+import ProjectDetails from "./ProjectDetails";
 
-const ProjectDetailsIndex: React.FC = () => {
+export default function ProjectDetailsIndex() {
   return (
-    <TasksProvider>
-      <ProjectDetails />
-      <Outlet />
-    </TasksProvider>
+    <>
+      <TasksProvider>
+        <ProjectDetails />
+        <Outlet />
+      </TasksProvider>
+    </>
   );
-};
-
-export default ProjectDetailsIndex;
+}

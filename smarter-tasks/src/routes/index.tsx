@@ -1,19 +1,29 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-
+import { Navigate, createBrowserRouter } from "react-router-dom";
+import TaskDetailsContainer from "../pages/tasks/TaskDetailsContainer";
+import ProjectContainer from "../pages/projects/ProjectContainer";
+import NotFound from "../pages/Notfound";
 import AccountLayout from "../layouts/account";
 import ProtectedRoute from "./ProtectedRoutes";
+import Projects from "../pages/projects";
 import Signin from "../pages/signin";
 import Signup from "../pages/signup";
-import Projects from "../pages/projects";
-import Members from "../pages/members";
-import TaskDetailsContainer from "../pages/tasks/TaskDetailsContainer";
+
 import ProjectDetails from "../pages/project_details";
-import ProjectContainer from "../pages/projects/ProjectContainer";
+
+import Members from "../pages/members";
 import Logout from "../pages/logout";
 import NewTask from "../pages/tasks/NewTask";
 
 const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/account/projects" replace /> },
+  {
+    path: "/",
+    element: <Signin />,
+  },
+  {
+    path: "/notfound",
+    element: <NotFound />,
+  },
   {
     path: "/signin",
     element: <Signin />,
@@ -22,11 +32,7 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
-  {
-    path: "/logout",
-    element: <Logout />,
-  },
-  // Protected Routes
+
   {
     path: "/account",
 
@@ -43,7 +49,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Projects /> },
           {
-            path: ":projectID",
+            path: ":pid",
             element: <ProjectDetails />,
             children: [
               { index: true, element: <></> },
@@ -53,7 +59,7 @@ const router = createBrowserRouter([
                   { index: true, element: <Navigate to="../" replace /> },
                   { path: "new", element: <NewTask /> },
                   {
-                    path: ":taskID",
+                    path: ":tid",
                     children: [
                       { index: true, element: <TaskDetailsContainer /> },
                     ],

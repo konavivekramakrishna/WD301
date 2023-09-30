@@ -1,59 +1,45 @@
 import {
-  useMemberDispatch,
-  useMemberState,
+  useMembersState,
+  useMembersDispatch,
 } from "../../context/members/context";
 
-import { deleteMemberWithId } from "../../context/members/actions";
+import { deleteMember } from "../../context/members/actions";
 
-const MemberListItems = () => {
-  const state: any = useMemberState();
-  const dispatchMembers = useMemberDispatch();
+export default function MemberListItems() {
+  const state: any = useMembersState();
+  const dispatchMembers: any = useMembersDispatch();
 
-  const { members, isLoading, isError, ErrorMessage } = state;
+  const { members, isLoading, isError, errorMessage } = state;
 
-  console.log(members);
+  const deleteMemberHandler = async (id: number) => {
+    const response = await deleteMember(dispatchMembers, id);
+    console.log(response);
+    if (response.ok) {
+      console.log("deleted successfully!!!");
+    }
+  };
 
   if (members.length === 0 && isLoading) {
-    return (
-      <div className="flex justify-center items-center space-x-2">
-        <p>Loading...</p>
-      </div>
-    );
+    return <span className="text-gray-600">Wait...</span>;
   }
-
   if (isError) {
-    return (
-      <div className="flex justify-center items-center space-x-2">
-        <p>{ErrorMessage}</p>
-      </div>
-    );
-  }
-
-  if (members.length === 0) {
-    return <span>No users</span>;
+    return <span className="text-red-500">{errorMessage}</span>;
   }
 
   return (
-    <div className="flex flex-col space-y-4">
-      {members.map((member: any) => (
-        <div className="member" key={member.id} id="member">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <p>{member.name}</p>
-              <p>{member.email}</p>
-            </div>
-            <button
-              onClick={() => {
-                deleteMemberWithId(dispatchMembers, member.id);
-              }}
-            >
-              Delete
-            </button>
-          </div>
+    <>
+      {members.map((item: any) => (
+        <div key={item.id} className="bg-white p-4 rounded shadow mb-4">
+          <h5 className="text-xl font-semibold text-gray-800">{item.email}</h5>
+          <h5 className="text-lg text-gray-600">{item.name}</h5>
+          <button
+            onClick={() => deleteMemberHandler(item.id)}
+            className="bg-red-500 text-white px-3 py-1 rounded mt-2"
+          >
+            Delete
+          </button>
         </div>
       ))}
-    </div>
+    </>
   );
-};
-
-export default MemberListItems;
+}

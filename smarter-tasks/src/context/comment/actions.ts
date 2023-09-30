@@ -1,19 +1,50 @@
 import { API_ENDPOINT } from "../../config/constants";
 
-export const fetchAllCommentsRequest = async (
+export const addComment = async (
   dispatch: any,
-
-  project_id: string,
-  task_id: string,
+  pid: string,
+  tid: string,
+  comment: string,
 ) => {
+  try {
+    const secretToken = localStorage.getItem("authToken") ?? "";
+    const res = await fetch(
+      `${API_ENDPOINT}/projects/${pid}/tasks/${tid}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${secretToken}`,
+        },
+
+        body: JSON.stringify({ description: comment }),
+      },
+    );
+    if (!res.ok) {
+      throw new Error("Unable to add comment");
+    }
+    const resdata = await res.json();
+    if (resdata.errors && resdata.errors.length > 0) {
+      return { ok: false, error: resdata.errors[0].message };
+    }
+
+    dispatch({ type: "ADD_COMMENT_SUCCESS", payload: resdata });
+
+    getComments(dispatch, pid, tid);
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
+};
+
+export const getComments = async (dispatch: any, pid: string, tid: string) => {
   const secretToken = localStorage.getItem("authToken") ?? "";
 
   try {
-    dispatch({
-      type: "FETCH_ALL_COMMENTS_REQUEST",
-    });
+    dispatch({ type: "FETCH_ALL _COMMENTS_REQUEST" });
     const res = await fetch(
-      `${API_ENDPOINT}/projects/${project_id}/tasks/${task_id}/comments`,
+      `${API_ENDPOINT}/projects/${pid}/tasks/${tid}/comments`,
       {
         method: "GET",
         headers: {
@@ -22,57 +53,13 @@ export const fetchAllCommentsRequest = async (
         },
       },
     );
-    const data = await res.json();
+    const resdata = await res.json();
+    dispatch({ type: "FETCH_ALL_COMMENTS_SUCCESS", payload: resdata });
+  } catch (error) {
+    console.log("Error while Getting Comments", error);
     dispatch({
-      type: "FETCH_ALL_COMMENTS_SUCCESS",
-      payload: {
-        comments: data,
-      },
+      type: "FETCH_ALL_COMMENTS_FAILURE",
+      payload: " Error while Getting Comments",
     });
-  } catch (error) {}
-  console.log("Error while getting comments");
-  dispatch({
-    type: "FETCH_ALL_COMMENTS_FAILURE",
-    payload: "Error while getting comments",
-  });
-};
-
-export const addComment = async (
-  dispatch: any,
-  task_id: string,
-  project_id: string,
-  comment: string,
-) => {
-  try {
-    const secretToken = localStorage.getItem("authToken") ?? "";
-
-    const res = await fetch(
-      `${API_ENDPOINT}/projects/${project_id}/tasks/${task_id}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${secretToken}`,
-        },
-        body: JSON.stringify({
-          description: comment,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      throw new Error("Error while adding comment");
-    }
-
-    const data = await res.json();
-    if (data.errors && data.errors.length > 0) {
-      return { ok: false, error: data.errors[0].message };
-    }
-
-    dispatch({
-      type: "ADD_COMMENT_SUCCESS",
-      payload: data,
-    });
-    fetchAllCommentsRequest(dispatch, project_id, task_id);
-  } catch (error) {}
+  }
 };

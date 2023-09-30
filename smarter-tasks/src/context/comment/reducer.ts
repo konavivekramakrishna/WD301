@@ -1,39 +1,37 @@
-import { CommentsActionType, CommentsStateType } from "./types";
+import { CommentsActions } from "./types";
+import { CommentsState } from "./types";
 
-export const initialState: CommentsStateType = {
+export const initialState: CommentsState = {
+  isError: false,
+  errorMessage: "",
   comments: [],
-  error: false,
-  ErrorMessage: "",
-  loading: false,
+  isLoading: false,
 };
 
-export const commentsReducer = (
-  state: CommentsStateType = initialState,
-  action: CommentsActionType,
-): CommentsStateType => {
+export const reducer = (
+  state: CommentsState = initialState,
+  action: CommentsActions,
+): CommentsState => {
   switch (action.type) {
+    case "ADD_COMMENT_SUCCESS":
+      return { ...state, comments: [...state.comments, action.payload] };
     case "FETCH_ALL_COMMENTS_REQUEST":
       return {
         ...state,
-        loading: true,
-      };
-    case "FETCH_ALL_COMMENTS_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        comments: action.payload,
+        isLoading: true,
       };
     case "FETCH_ALL_COMMENTS_FAILURE":
       return {
         ...state,
-        loading: false,
-        error: true,
-        ErrorMessage: "",
+        isLoading: false,
+        isError: true,
+        errorMessage: action.payload,
       };
-    case "ADD_COMMENT_SUCCESS":
+    case "FETCH_ALL_COMMENTS_SUCCESS":
       return {
         ...state,
-        comments: [...state.comments, action.payload],
+        isLoading: false,
+        comments: action.payload,
       };
     default:
       return state;

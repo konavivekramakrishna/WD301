@@ -1,88 +1,97 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-/* eslint-disable react/react-in-jsx-scope */
+import { Fragment, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Fragment, useState } from "react";
-import { Dialog, Transition, Listbox } from "@headlessui/react";
-import { updateTask } from "../../context/task/actions";
-
-import { useProjectsState } from "../../context/projects/context";
-import { TaskDetailsPayload } from "../../context/task/types";
-import { useMemberState } from "../../context/members/context";
-
-import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTasksDispatch, useTasksState } from "../../context/task/context";
+import { updateTask } from "../../context/task/actions";
+import { useCommentsDispatch } from "../../context/comment/context";
+import { getComments } from "../../context/comment/actions";
+import CommentList from "./CommentList";
+import { Dialog, Transition, Listbox } from "@headlessui/react";
+import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 
-type TaskFormUpdatePayload = TaskDetailsPayload & {
+import NewComment from "./NewComment";
+import { useProjectsState } from "../../context/projects/context";
+import { TaskDetailsPayloadType } from "../../context/task/types";
+import { useMembersState } from "../../context/members/context";
+
+type TaskFormUpdatePayload = TaskDetailsPayloadType & {
   selectedPerson: string;
 };
 
-const TaskDetails = () => {
-  let { projectID, taskID } = useParams();
-  let Navigator = useNavigate();
+const FormatDate = (date: string) => {
+  const dateObj = new Date(date);
 
-  const projectState = useProjectsState();
-  let [Open, setOpen] = useState(true);
-  const memberState = useMemberState();
-  const taskListState = useTasksState();
-  const taskDispatch = useTasksDispatch();
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
 
-  const selectedTask = taskListState.projectData.tasks[taskID ?? ""];
+  return `${year}-${month}-${day}`;
+};
 
-  const SelectedProject = projectState?.projects.filter(
-    (project) => `${project.id}` === projectID
+export default function TaskDetails() {
+  let { pid, tid } = useParams();
+  let navigator = useNavigate();
+  const memberState = useMembersState();
+
+  const commentDispatch = useCommentsDispatch();
+
+  const pState = useProjectsState();
+  const TLState = useTasksState();
+  let [open, setOpen] = useState(true);
+  const tDispatch = useTasksDispatch();
+
+  const sProject = pState?.projects.filter(
+    (project) => `${project.id}` === pid,
   )[0];
 
+  const selectedTask = TLState.projectData.tasks[tid ?? ""];
+
   const [selectedPerson, setSelectedPerson] = useState(
-    selectedTask.assignedUserName ?? ""
+    selectedTask.assignedUserName ?? "",
   );
-  const formatDateForPicker = (isoDate: string) => {
-    const dateObj = new Date(isoDate);
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const day = String(dateObj.getDate()).padStart(2, "0");
 
-    return `${year}-${month}-${day}`;
-  };
-  const {
-    handleSubmit,
+  useEffect(() => {
+    getComments(commentDispatch, `${pid}`, `${tid}`);
+  }, [tid, pid, commentDispatch]);
 
-    register,
-  } = useForm<TaskFormUpdatePayload>({
+  const { register, handleSubmit } = useForm<TaskFormUpdatePayload>({
     defaultValues: {
+      title: selectedTask.title,
       description: selectedTask.description,
       selectedPerson: selectedTask.assignedUserName,
-      dueDate: formatDateForPicker(selectedTask.dueDate),
-      title: selectedTask.title,
+      dueDate: FormatDate(selectedTask.dueDate),
     },
   });
 
-  if (!SelectedProject) {
-    return <>Nope, No such Project!</>;
-  }
-
-  const onSubmit: SubmitHandler<TaskFormUpdatePayload> = async (data) => {
-    const assignee = memberState?.members?.filter(
-      (member) => member.name === selectedPerson
+  const Submit: SubmitHandler<TaskFormUpdatePayload> = async (data) => {
+    const assign = memberState?.members?.filter(
+      (member) => member.name === selectedPerson,
     )?.[0];
-    updateTask(taskDispatch, projectID ?? "", {
-      ...selectedTask,
-      ...data,
-      assignee: assignee?.id,
-    });
-    CloseModal();
+    updateTask(
+      pid ?? "",
+      {
+        ...selectedTask,
+        ...data,
+        assignee: assign?.id,
+      },
+      tDispatch,
+    );
+    closeM();
   };
 
-  function CloseModal() {
+  if (!sProject) {
+    return <>No such Project!</>;
+  }
+
+  function closeM() {
     setOpen(false);
-    Navigator("../../");
+    navigator("../../");
   }
 
   return (
     <>
-      <Transition appear show={Open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={CloseModal}>
+      <Transition appear show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeM}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -114,7 +123,7 @@ const TaskDetails = () => {
                     Task Details
                   </Dialog.Title>
                   <div className="mt-2">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(Submit)}>
                       <input
                         type="text"
                         required
@@ -195,13 +204,16 @@ const TaskDetails = () => {
                       </button>
                       <button
                         type="submit"
-                        onClick={CloseModal}
+                        onClick={closeM}
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
                         Cancel
                       </button>
                     </form>
                   </div>
+
+                  <NewComment />
+                  <CommentList />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -210,6 +222,4 @@ const TaskDetails = () => {
       </Transition>
     </>
   );
-};
-
-export default TaskDetails;
+}

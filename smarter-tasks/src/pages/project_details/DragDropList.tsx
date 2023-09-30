@@ -1,17 +1,23 @@
-import React from "react";
-import { AvailableColumns } from "../../context/task/types";
-import { useParams } from "react-router-dom";
 import { useTasksDispatch } from "../../context/task/context";
-import { ProjectData } from "../../context/task/types";
+import {
+  AvailableColumnsType,
+  ProjectDataType,
+} from "../../context/task/types";
+
+import React from "react";
 import Column from "./Column";
 import { DragDropContext, OnDragEndResponder } from "react-beautiful-dnd";
+
+import { useParams } from "react-router-dom";
+
 import { reorderTasks, updateTask } from "../../context/task/actions";
+
 const Container = (props: React.PropsWithChildren) => {
   return <div className="flex">{props.children}</div>;
 };
 
-const DragDropList = (props: { data: ProjectData }) => {
-  const { ProjectID } = useParams();
+export default function (props: { data: ProjectDataType }) {
+  const { pid } = useParams();
   const taskDispatch = useTasksDispatch();
 
   const onDragEnd: OnDragEndResponder = (result) => {
@@ -25,73 +31,72 @@ const DragDropList = (props: { data: ProjectData }) => {
     ) {
       return;
     }
-    // Get source list
-    const startKey = source.droppableId as AvailableColumns;
-    // Get destination list
-    const finishKey = destination.droppableId as AvailableColumns;
-
-    // Get source list to modify
-    const start = props.data.columns[startKey];
-    // Get destination list to modify
-    const finish = props.data.columns[finishKey];
+    const skey = source.droppableId as AvailableColumnsType;
+    const fkey = destination.droppableId as AvailableColumnsType;
+    const finish = props.data.columns[fkey];
+    const start = props.data.columns[skey];
 
     if (start === finish) {
-      const newTaskIDs = Array.from(start.taskIDs);
-      // Remove the dragged item from source list
-      newTaskIDs.splice(source.index, 1);
-      // Insert the item to destination list
-      newTaskIDs.splice(destination.index, 0, draggableId);
-      const newColumn = {
+      const nTaskIDs = Array.from(start.taskIDs);
+      nTaskIDs.splice(source.index, 1);
+      nTaskIDs.splice(destination.index, 0, draggableId);
+      const nColumn = {
         ...start,
-        taskIDs: newTaskIDs,
+        taskIDs: nTaskIDs,
       };
-      const newState = {
+      const nState = {
         ...props.data,
         columns: {
           ...props.data.columns,
-          [newColumn.id]: newColumn,
+          [nColumn.id]: nColumn,
         },
       };
-      reorderTasks(taskDispatch, newState);
+      reorderTasks(nState, taskDispatch);
       return;
     }
 
-    const newTaskIDs = Array.from(start.taskIDs);
-    // Remove the dragged item from source list
-    newTaskIDs.splice(source.index, 1);
-    // Insert the item to destination list
-    newTaskIDs.splice(destination.index, 0, draggableId);
-    const newColumn = {
+    const sTaskIDs = Array.from(start.taskIDs);
+
+    const uItems = sTaskIDs.splice(source.index, 1);
+
+    const nStart = {
       ...start,
-      taskIDs: newTaskIDs,
+      taskIDs: sTaskIDs,
     };
-    const newState = {
+
+    const fTaskIDs = Array.from(finish.taskIDs);
+
+    fTaskIDs.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finish,
+      taskIDs: fTaskIDs,
+    };
+
+    const nState = {
       ...props.data,
       columns: {
         ...props.data.columns,
-        [newColumn.id]: newColumn,
+        [nStart.id]: nStart,
+        [newFinish.id]: newFinish,
       },
     };
-
-    const startTaskIds = Array.from(start.taskIDs);
-    const UpdatedItems = startTaskIds.splice(source.index, 1);
-    reorderTasks(taskDispatch, newState);
-    const UpdatedTask = props.data.tasks[UpdatedItems[0]];
-    updateTask(taskDispatch, ProjectID ?? "", UpdatedTask);
+    reorderTasks(nState, taskDispatch);
+    const uTask = props.data.tasks[uItems[0]];
+    uTask.state = fkey;
+    updateTask(pid ?? "", uTask, taskDispatch);
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Container>
         {props.data.columnOrder.map((colID) => {
           const column = props.data.columns[colID];
           const tasks = column.taskIDs.map(
-            (taskID) => props.data.tasks[taskID],
+            (taskID: any) => props.data.tasks[taskID],
           );
           return <Column key={column.id} column={column} tasks={tasks} />;
         })}
       </Container>
     </DragDropContext>
   );
-};
-
-export default DragDropList;
+}

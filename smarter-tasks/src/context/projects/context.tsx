@@ -1,26 +1,24 @@
 import {
-  reducer,
+  Projectreducer,
   initialState,
-  ProjectsState,
+  ProjectsStateType,
   ProjectsActions,
 } from "./reducer";
 
-import React, { createContext, useContext, useReducer } from "react";
+import React, { useContext, useReducer, createContext } from "react";
 
-const ProjectsStateContext = createContext<ProjectsState | undefined>(
+const ProjectsStateContext = createContext<ProjectsStateType | undefined>(
   undefined,
 );
-
-type ProjectsDispatch = React.Dispatch<ProjectsActions>;
-
-const ProjectsDispatchContext = createContext<ProjectsDispatch | undefined>(
+type ProjectsDispatchType = React.Dispatch<ProjectsActions>;
+const ProjectsDispatchContext = createContext<ProjectsDispatchType | undefined>(
   undefined,
 );
 
 export const ProjectsProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(Projectreducer, initialState);
 
   return (
     <ProjectsStateContext.Provider value={state}>
@@ -32,4 +30,5 @@ export const ProjectsProvider: React.FC<React.PropsWithChildren> = ({
 };
 
 export const useProjectsState = () => useContext(ProjectsStateContext);
+
 export const useProjectsDispatch = () => useContext(ProjectsDispatchContext);

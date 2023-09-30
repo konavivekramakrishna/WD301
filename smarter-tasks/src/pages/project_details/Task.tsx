@@ -1,51 +1,42 @@
-import { TaskDetails } from "../../context/task/types";
-import "./TaskCard.css";
-import { Link } from "react-router-dom";
 import React, { forwardRef } from "react";
-import { useParams } from "react-router-dom";
+import "./TaskCard.css";
+import { Link, useParams } from "react-router-dom";
+import { Draggable } from "react-beautiful-dnd";
 import { useTasksDispatch } from "../../context/task/context";
+import { TaskDetailsType } from "../../context/task/types";
 import { deleteTask } from "../../context/task/actions";
+
 const Task = forwardRef<
   HTMLDivElement,
-  React.PropsWithChildren<{ task: TaskDetails }>
+  React.PropsWithChildren<{ task: TaskDetailsType }>
 >((props, ref) => {
-  const taskDispatch = useTasksDispatch();
-  const { projectID } = useParams();
   const { task } = props;
+  const taskDispatch = useTasksDispatch();
+  const { pid } = useParams();
   return (
-    <div ref={ref} {...props} className="m-2 flex">
-      <Link
-        className="TaskItem w-full shadow-md border border-slate-100 bg-white"
-        to={`tasks/${task.id}`}
-      >
-        <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+    <div
+      ref={ref}
+      {...props}
+      className="bg-white p-4 rounded-lg shadow-md mb-4"
+    >
+      <Link to={`tasks/${task.id}`}>
+        <div>
           <div>
-            <h2 className="text-base font-bold my-1">{task.title}</h2>
-            <p className="text-sm text-slate-500">
+            <h2 className="text-lg font-semibold">{task.title}</h2>
+            <p className="text-gray-600">
               {new Date(task.dueDate).toDateString()}
             </p>
-            <p className="text-sm text-slate-500">
-              Description: {task.description}
-            </p>
-            <p className="text-sm text-slate-500">
+            <p className="text-gray-800">Description: {task.description}</p>
+            <p className="text-gray-800">
               Assignee: {task.assignedUserName ?? "-"}
             </p>
           </div>
-          <div>
-            <h2 className="text-base font-bold my-1">{task.title}</h2>
-            <p className="text-sm text-slate-500">
-              {new Date(task.dueDate).toDateString()}
-            </p>
-            <p className="text-sm text-slate-500">
-              Description: {task.description}
-            </p>
-          </div>
           <button
-            className="deleteTaskButton cursor-pointer h-4 w-4 rounded-full my-5 mr-5"
             onClick={(event) => {
               event.preventDefault();
-              deleteTask(taskDispatch, projectID ?? "", task);
+              deleteTask(pid ?? "", task, taskDispatch);
             }}
+            className="text-red-500 hover:text-red-700 focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,17 +55,26 @@ const Task = forwardRef<
           </button>
         </div>
       </Link>
+      <div></div>
     </div>
   );
 });
 
-const Container = (
-  props: React.PropsWithChildren<{
-    task: TaskDetails;
-    index: number;
-  }>,
-) => {
-  return <Task task={props.task} />;
-};
-
-export default Container;
+export default function Container(
+  props: React.PropsWithChildren<{ index: number; task: TaskDetailsType }>,
+) {
+  return (
+    <>
+      <Draggable index={props.index} draggableId={`${props.task.id}`}>
+        {(provided) => (
+          <Task
+            task={props.task}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          />
+        )}
+      </Draggable>
+    </>
+  );
+}

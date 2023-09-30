@@ -1,34 +1,27 @@
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  org_id: number;
-}
-
 export interface MembersState {
   members: Member[];
   isLoading: boolean;
   isError: boolean;
-  ErrorMessage: string;
+  errorMessage: string;
 }
+
+export type MembersActions =
+  | { type: "FETCH_ALL_MEMBERS_REQUEST" }
+  | { type: "FETCH_ALL_MEMBERS_SUCCESS"; payload: Member[] }
+  | { type: "FETCH_ALL_MEMBERS_FAILURE"; payload: string }
+  | { type: "ADD_MEMBER_SUCCESS"; payload: Member }
+  | { type: "DELETE_ALL_MEMBER_SUCCESS"; payload: number };
 
 export const initialState: MembersState = {
   members: [],
   isLoading: false,
   isError: false,
-  ErrorMessage: "",
+  errorMessage: "",
 };
-
-export type MemberReducerAction =
-  | { type: "FETCH_ALL_MEMBERS_REQUEST" }
-  | { type: "FETCH_ALL_MEMBERS_SUCCESS"; payload: Member[] }
-  | { type: "FETCH_ALL_MEMBERS_FAILURE"; payload: string }
-  | { type: "ADD_MEMBER_SUCCESS"; payload: Member }
-  | { type: "DELETE_MEMBER_SUCCESS"; payload: number };
 
 export const reducer = (
   state: MembersState = initialState,
-  action: MemberReducerAction,
+  action: MembersActions,
 ): MembersState => {
   switch (action.type) {
     case "FETCH_ALL_MEMBERS_REQUEST":
@@ -47,19 +40,23 @@ export const reducer = (
         ...state,
         isLoading: false,
         isError: true,
-        ErrorMessage: action.payload,
+        errorMessage: action.payload,
       };
     case "ADD_MEMBER_SUCCESS":
+      return { ...state, members: [...state.members, action.payload] };
+    case "DELETE_ALL_MEMBER_SUCCESS":
       return {
         ...state,
-        members: [...state.members, action.payload],
-      };
-    case "DELETE_MEMBER_SUCCESS":
-      return {
-        ...state,
-        members: state.members.filter((member) => member.id !== action.payload),
+        members: state.members.filter((member) => member.id != action.payload),
       };
     default:
       return state;
   }
 };
+
+interface Member {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
