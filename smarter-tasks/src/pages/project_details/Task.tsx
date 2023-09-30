@@ -36,7 +36,7 @@ const Task = forwardRef<
               event.preventDefault();
               deleteTask(pid ?? "", task, taskDispatch);
             }}
-            className="text-red-500 hover:text-red-700 focus:outline-none"
+            className="text-red-500 deleteTaskButton hover:text-red-700 focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@ const Task = forwardRef<
 });
 
 export default function Container(
-  props: React.PropsWithChildren<{ index: number; task: TaskDetailsType }>,
+  props: React.PropsWithChildren<{ index: number; task: TaskDetailsType }>
 ) {
   return (
     <>
