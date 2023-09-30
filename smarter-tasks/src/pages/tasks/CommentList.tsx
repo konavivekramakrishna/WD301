@@ -35,7 +35,7 @@ const CommentList = () => {
       {comments.map((comment) => (
         <div
           key={comment.createdAt}
-          className="bg-white p-4 rounded-lg shadow-md mb-4"
+          className="bg-white comment p-4 rounded-lg shadow-md mb-4"
         >
           <h5 className="text-lg font-semibold text-gray-800">
             {getusername(comment.owner)}
