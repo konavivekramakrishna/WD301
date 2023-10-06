@@ -4,7 +4,7 @@ export const addComment = async (
   dispatch: any,
   pid: string,
   tid: string,
-  comment: string
+  comment: string,
 ) => {
   try {
     const secretToken = localStorage.getItem("authToken") ?? "";
@@ -18,7 +18,7 @@ export const addComment = async (
         },
 
         body: JSON.stringify({ description: comment }),
-      }
+      },
     );
     if (!res.ok) {
       throw new Error("Unable to add comment");
@@ -51,12 +51,12 @@ export const getComments = async (dispatch: any, pid: string, tid: string) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${secretToken}`,
         },
-      }
+      },
     );
     let resdata = await res.json();
     resdata = resdata.sort(
       (a: any, b: any) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
     dispatch({ type: "FETCH_ALL_COMMENTS_SUCCESS", payload: resdata });
   } catch (error) {

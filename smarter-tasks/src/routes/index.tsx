@@ -2,14 +2,14 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import React from "react";
 
 const TaskDetailsContainer = React.lazy(
-  () => import("../pages/tasks/TaskDetailsContainer")
+  () => import("../pages/tasks/TaskDetailsContainer"),
 );
 const ProjectContainer = React.lazy(
-  () => import("../pages/projects/ProjectContainer")
+  () => import("../pages/projects/ProjectContainer"),
 );
 const NotFound = React.lazy(() => import("../pages/Notfound"));
 const AccountLayout = React.lazy(() => import("../layouts/account"));
-const ProtectedRoute = React.lazy(() => import("./ProtectedRoutes"));
+const ProtectedRoute = React.lazy(() => import("./ProtectedRoute"));
 const Projects = React.lazy(() => import("../pages/projects"));
 const Signin = React.lazy(() => import("../pages/signin"));
 const Signup = React.lazy(() => import("../pages/signup"));

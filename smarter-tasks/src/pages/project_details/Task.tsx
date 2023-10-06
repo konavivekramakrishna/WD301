@@ -61,7 +61,7 @@ const Task = forwardRef<
 });
 
 export default function Container(
-  props: React.PropsWithChildren<{ index: number; task: TaskDetailsType }>
+  props: React.PropsWithChildren<{ index: number; task: TaskDetailsType }>,
 ) {
   return (
     <>
