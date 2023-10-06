@@ -44,5 +44,5 @@ export default defineConfig({
       },
     }),
   ],
-  mode: "development",
+  mode: "production",
 });
