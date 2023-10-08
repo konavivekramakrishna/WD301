@@ -1,1 +1,0 @@
-import{h as o,j as e,N as a}from"./index-5b7e78c2.js";function c({children:t}){const{pathname:r}=o();return localStorage.getItem("authToken")?e.jsx(e.Fragment,{children:t}):e.jsx(a,{to:"/signin",replace:!0,state:{referrer:r}})}export{c as default};
