@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import React, { Suspense } from "react";
+import React from "react";
 
 const TaskDetailsContainer = React.lazy(
   () => import("../pages/tasks/TaskDetailsContainer")
@@ -28,20 +28,14 @@ const router = createBrowserRouter([
     path: "/account",
     element: (
       <ProtectedRoute>
-        <Suspense fallback={<div>Loading...</div>}>
-          <AccountLayout />
-        </Suspense>
+        <AccountLayout />
       </ProtectedRoute>
     ),
     children: [
       { index: true, element: <Navigate to="/account/projects" replace /> },
       {
         path: "projects",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <ProjectContainer />
-          </Suspense>
-        ),
+        element: <ProjectContainer />,
         children: [
           { index: true, element: <Projects /> },
           {
@@ -68,11 +62,7 @@ const router = createBrowserRouter([
       },
       {
         path: "members",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Members />
-          </Suspense>
-        ),
+        element: <Members />,
       },
     ],
   },
@@ -80,4 +70,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-  
