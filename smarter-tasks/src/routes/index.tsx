@@ -1,22 +1,17 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import React from "react";
 
-const TaskDetailsContainer = React.lazy(
-  () => import("../pages/tasks/TaskDetailsContainer")
-);
-const ProjectContainer = React.lazy(
-  () => import("../pages/projects/ProjectContainer")
-);
-const NotFound = React.lazy(() => import("../pages/Notfound"));
-const AccountLayout = React.lazy(() => import("../layouts/account"));
-const ProtectedRoute = React.lazy(() => import("./ProtectedRoute"));
-const Projects = React.lazy(() => import("../pages/projects"));
-const Signin = React.lazy(() => import("../pages/signin"));
-const Signup = React.lazy(() => import("../pages/signup"));
-const ProjectDetails = React.lazy(() => import("../pages/project_details"));
-const Members = React.lazy(() => import("../pages/members"));
-const Logout = React.lazy(() => import("../pages/logout"));
-const NewTask = React.lazy(() => import("../pages/tasks/NewTask"));
+import TaskDetailsContainer from "../pages/tasks/TaskDetailsContainer";
+import ProjectContainer from "../pages/projects/ProjectContainer";
+import NotFound from "../pages/Notfound";
+import AccountLayout from "../layouts/account";
+import ProtectedRoute from "./ProtectedRoute";
+import Projects from "../pages/projects";
+import Signin from "../pages/signin";
+import Signup from "../pages/signup";
+import ProjectDetails from "../pages/project_details";
+import Members from "../pages/members";
+import Logout from "../pages/logout";
+import NewTask from "../pages/tasks/NewTask";
 
 const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/account/projects" replace /> },
