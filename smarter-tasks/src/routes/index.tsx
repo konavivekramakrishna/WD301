@@ -1,11 +1,11 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import React from "react";
+import React, { Suspense } from "react";
 
 const TaskDetailsContainer = React.lazy(
-  () => import("../pages/tasks/TaskDetailsContainer"),
+  () => import("../pages/tasks/TaskDetailsContainer")
 );
 const ProjectContainer = React.lazy(
-  () => import("../pages/projects/ProjectContainer"),
+  () => import("../pages/projects/ProjectContainer")
 );
 const NotFound = React.lazy(() => import("../pages/Notfound"));
 const AccountLayout = React.lazy(() => import("../layouts/account"));
@@ -28,14 +28,20 @@ const router = createBrowserRouter([
     path: "/account",
     element: (
       <ProtectedRoute>
-        <AccountLayout />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AccountLayout />
+        </Suspense>
       </ProtectedRoute>
     ),
     children: [
       { index: true, element: <Navigate to="/account/projects" replace /> },
       {
         path: "projects",
-        element: <ProjectContainer />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProjectContainer />
+          </Suspense>
+        ),
         children: [
           { index: true, element: <Projects /> },
           {
@@ -62,7 +68,11 @@ const router = createBrowserRouter([
       },
       {
         path: "members",
-        element: <Members />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Members />
+          </Suspense>
+        ),
       },
     ],
   },
@@ -70,3 +80,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+  
