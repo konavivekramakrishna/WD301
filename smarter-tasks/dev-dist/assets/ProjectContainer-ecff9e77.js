@@ -1,0 +1,1 @@
+import{f as e,g as r,r as o,j as a,O as c}from"./index-5b7e78c2.js";import{f}from"./actions-2a13c71f.js";import{f as m}from"./actions-296af49a.js";import"./constants-a400ef56.js";function j(){const t=e(),s=r();return o.useEffect(()=>{m(s),f(t)},[s,t]),a.jsx(c,{})}export{j as default};
